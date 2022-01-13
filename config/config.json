@@ -1,10 +1,18 @@
 {
     "development": {
+<<<<<<< HEAD
       "username": "postgres",
       "password": null,
       "database": "the-blog-corner",
       "host": "127.0.0.1",
       "dialect": "postgres"
+=======
+        "username": "postgres",
+        "password": null,
+        "database": "the-blog-corner",
+        "host": "127.0.0.1",
+        "dialect": "postgres"
+>>>>>>> 1a06ddae2fc2ccb6d86c96e08ba885ddf7abfdf3
     },
     "production": {
       "use_env_variable": "DATABASE_URL"
