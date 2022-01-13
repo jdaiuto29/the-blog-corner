@@ -1,26 +1,34 @@
 'use strict';
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Blogs', [
-      {
-        id: 4, 
-        title: 'Books3',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ])
+    up: async(queryInterface, Sequelize) => {
+        await queryInterface.bulkInsert('Blogs', [{
+                title: 'Sports',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                title: 'Flowers',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                title: 'Books',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }
+        ])
     },
-  
 
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Blogs', {
-      id: {
-          [Sequelize.Op.or]: [
-              4,
-              
-          ]
-      }
-  })
-}
+
+    down: async(queryInterface, Sequelize) => {
+        await queryInterface.bulkDelete('Blogs', {
+            id: {
+                [Sequelize.Op.or]: [
+                    4,
+
+                ]
+            }
+        })
+    }
 };
