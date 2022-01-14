@@ -89,7 +89,7 @@ router.get('/:id', (req, res, next) => {
 //         })
 // });
 
-router.post('/:blogId/reviews', checkAuth, (req, res) => {
+router.post('/:blogId/posts', checkAuth, (req, res) => {
     if (!req.body.text) {
         res.status(400).json({
             error: 'Please include all required fields'
@@ -120,7 +120,7 @@ router.get('/:blogId/posts', (req, res) => {
         .then(blog => {
             if (!blog) {
                 res.status(404).json({
-                    error: 'Could not find restaurant with that id'
+                    error: 'Could not find blog with that id'
                 })
                 return
             }

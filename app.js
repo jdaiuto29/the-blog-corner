@@ -7,7 +7,10 @@ const logger = require('morgan');
 const db = require("./models");
 const SequelizeSession = require('connect-session-sequelize')(session.Store)
 const store = new SequelizeSession({ db: db.sequelize })
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2224311fce1b76d95a47cdc12ccd379cec1ee1e9
 const blogsApiRouter = require('./routes/api/blog');
 const usersApiRouter = require('./routes/api/user');
 const indexRouter = require('./routes/index');
