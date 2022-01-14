@@ -4,7 +4,6 @@
 const id = new URLSearchParams(location.search).get('id')
 
 function renderBlogs(blog) {
-    console.log('weekend!')
     document.querySelector('#title').innerHTML = blog.title
 }
 
@@ -38,7 +37,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
     //send data to backend
     axios.post(`/api/v1/blogs/${id}/posts`, {
         text: document.querySelector("#text").value,
-        createdAt: document.querySelector("#createdAt").value
+        createdAt: document.querySelector(".createdAt").value
         })
         .then(res => {
             // on success display success message
@@ -50,6 +49,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
             .then(res => {
                 renderPosts(res.data)
             })
+
             //hide review form
             //change location below instead of having reviewForm
             
@@ -60,6 +60,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
             //display error
             alert(error.response.data.error || 'Something went wrong')
         })
+
     } )
 
 
