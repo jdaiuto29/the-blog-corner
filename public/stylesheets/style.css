@@ -1,8 +1,32 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+.everything {
+  background-color: #ffecd1;
+  color: #001524;
+  border-style: double;
+  border-color: #001524;
+  padding-right: 0px;
 
-a {
-  color: #00B7FF;
+}
+header {
+  padding: 10px;
+}
+.blogs {
+  font-style: italic;
+}
+.firstNav {
+  padding: 24px;
+}
+.secondNav {
+  padding: 24px;
+  border-top-style: double;
+  border-color: #001524;
+}
+#plsWork {
+  margin-right: 0px;
+}
+.logo {
+  height: 50px;
+  width: 55px;
+}
+.allBody {
+  border-top: double #001524;
 }
