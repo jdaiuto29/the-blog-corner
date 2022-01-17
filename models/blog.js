@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             Blog.hasMany(models.Post)
+            Blog.hasMany(models.Comment)
         }
     };
     Blog.init({
