@@ -104,13 +104,23 @@ router.post('/:blogId/posts', checkAuth, (req, res) => {
         })
         return
       }
-      blog.createPost({
-          text: req.body.text,
-          // @ts-ignore
-          UserId: req.session.user.id
-        })
-        .then(post => {
-          res.status(201).json(post)
+      models.Blog.findByPk(req.params.blogId)
+        .then(blog => {
+          if (!blog) {
+            res.status(404).json({
+              error: 'could not find that blog'
+            })
+            return
+          }
+          blog.createPost({
+              text: req.body.text,
+              // @ts-ignore
+              UserId: req.session.user.id
+            })
+            .then(post => {
+              res.status(201).json(post)
+            })
+
         })
     })
 })
@@ -130,7 +140,47 @@ router.get('/:blogId/posts', (req, res) => {
     })
 })
 
+// create comments on a post
+router.post('/:blogId/:postId/comment', checkAuth, (req, res) => {
+    if (!req.body.comment) {
+      res.status(400).json({
+        error: 'Please include text'
+      })
+      return
+    }
+    models.Post.findByPk(req.params.postId)
+      .then(post => {
+        if (!post) {
+          res.status(404).json({
+            error: 'could not find that post'
+          })
+          return
+        }
+        post.createComment({
+            comment: req.body.comment,
+            // @ts-ignore
+            UserId: req.session.user.id
+          })
+          .then(comment => {
+            res.status(201).json(comment)
+          })
 
-
+      })
+  })
+  //get comments on a post
+router.get('/:blogId/:postId/comment', (req, res) => {
+  models.Post.findByPk(req.params.postId)
+    .then(post => {
+      if (!post) {
+        res.status(404).json({
+          error: 'Could not find post with that id'
+        })
+        return
+      }
+      post.getComments().then(comments => {
+        res.json(comments)
+      })
+    })
+})
 
 module.exports = router;
