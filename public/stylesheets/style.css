@@ -30,3 +30,18 @@ header {
 .allBody {
   border-top: double #001524;
 }
+.blogPosts{
+  margin: 20px;
+}
+#title {
+  margin: 10px;
+}
+#postForm {
+  margin: 20px;
+}
+.singlePost {
+  margin-top: 20px;
+}
+.commentSection {
+  margin: 15px;
+}

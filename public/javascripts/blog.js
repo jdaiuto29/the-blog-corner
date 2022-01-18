@@ -31,7 +31,7 @@ function renderPosts(posts) {
             })
 
           return `<div>
-        <div><img src="${post.user.profilePicture}" height="45px" width="45px"></div>
+        <div class = "singlePost"><img src="${post.user.profilePicture}" height="45px" width="45px"></div>
       <div>${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${post.createdAt.replace('T', ' @ ').slice(0,18)})</div>
       <div> ${post.text}</div>
       <div>${post.createdAt}</div>
