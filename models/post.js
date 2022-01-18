@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Post.belongsTo(models.Blog)
       Post.belongsTo(models.User)
+      // Post.hasMany(models.Like)
+      // User.hasMany(models.Like)
     }
   };
   Post.init({
