@@ -97,8 +97,10 @@ router.get('/:userId/profile', (req, res) => {
       return
     }
     res.json({
-      name: user.name,
-      reviews: user.Posts
+      firstName: user.firstName,
+      email: user.email,
+      reviews: user.Posts,
+      profilePicture: user.profilePicture
     })
   })
 })
