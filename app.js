@@ -1,4 +1,5 @@
 //@ts-check
+require("dotenv").config()
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -10,6 +11,7 @@ const store = new SequelizeSession({ db: db.sequelize })
 const blogsApiRouter = require('./routes/api/blog');
 const usersApiRouter = require('./routes/api/user');
 const indexRouter = require('./routes/index');
+const cors = require("cors");
 
 
 const app = express();
@@ -19,7 +21,7 @@ const app = express();
 // ... rest of express setup/middleware
 // ...rest of express routes, etc.
 
-
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
