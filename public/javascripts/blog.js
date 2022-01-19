@@ -107,7 +107,9 @@ document.querySelector('#postForm').addEventListener('submit', e => {
 
   })
   //used timeout so that form can find 'submitButton' after posts have been rendered
-const commentButtonTimeout = setTimeout(() => {
+
+
+  const commentButtonTimeout = setTimeout(() => {
   document.addEventListener('click', e => {
     if (e.target.id == 'submitButton') {
       e.preventDefault();
@@ -127,6 +129,8 @@ const commentButtonTimeout = setTimeout(() => {
     }
   })
 }, 2000);
+
+
 
 document.addEventListener('click', e => {
   if (e.target.classList.contains("likeButton")) {

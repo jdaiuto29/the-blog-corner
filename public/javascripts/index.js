@@ -11,3 +11,5 @@ axios.get('/api/v1/blogs')
     .then(res => {
         renderBlogs(res.data)
     })
+
+    
