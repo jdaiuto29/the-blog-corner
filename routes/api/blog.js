@@ -37,7 +37,7 @@ router.get('/:id', (req, res, next) => {
     .catch(e => {
       // if there are any errors, log them to the server console
       console.error(e)
-        // and send a 500 error response
+      // and send a 500 error response
       res.status(500).json({
         error: 'Server Error'
       })
@@ -89,7 +89,7 @@ router.get('/:id', (req, res, next) => {
 //             })
 //         })
 // });
-
+//create posts
 router.post('/:blogId/posts', checkAuth, (req, res) => {
   if (!req.body.text) {
     res.status(400).json({
@@ -105,27 +105,18 @@ router.post('/:blogId/posts', checkAuth, (req, res) => {
         })
         return
       }
-      models.Blog.findByPk(req.params.blogId)
-        .then(blog => {
-          if (!blog) {
-            res.status(404).json({
-              error: 'could not find that blog'
-            })
-            return
-          }
-          blog.createPost({
-              text: req.body.text,
-              // @ts-ignore
-              UserId: req.session.user.id
-            })
-            .then(post => {
-              res.status(201).json(post)
-            })
-
+      blog.createPost({
+        text: req.body.text,
+        // @ts-ignore
+        UserId: req.session.user.id
+      })
+        .then(post => {
+          res.status(201).json(post)
         })
+
     })
 })
-
+// get all posts
 router.get('/:blogId/posts', (req, res) => {
   models.Blog.findByPk(req.params.blogId)
     .then(blog => {
@@ -136,6 +127,7 @@ router.get('/:blogId/posts', (req, res) => {
         return
       }
       blog.getPosts({
+        order: [["createdAt", "DESC"]],
         include: [models.Comment, models.Like, models.Dislike]
       }).then(posts => {
         res.json(posts)
@@ -144,34 +136,34 @@ router.get('/:blogId/posts', (req, res) => {
 })
 
 // create comments on a post
-router.post('/:blogId/:postId/comment', checkAuth, (req, res) => {
-    if (!req.body.comment) {
-      res.status(400).json({
-        error: 'Please include text'
+router.post('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
+  if (!req.body.comment) {
+    res.status(400).json({
+      error: 'Please include text'
+    })
+    return
+  }
+  models.Post.findByPk(req.params.postId)
+    .then(post => {
+      if (!post) {
+        res.status(404).json({
+          error: 'could not find that post'
+        })
+        return
+      }
+      post.createComment({
+        comment: req.body.comment,
+        // @ts-ignore
+        UserId: req.session.user.id
       })
-      return
-    }
-    models.Post.findByPk(req.params.postId)
-      .then(post => {
-        if (!post) {
-          res.status(404).json({
-            error: 'could not find that post'
-          })
-          return
-        }
-        post.createComment({
-            comment: req.body.comment,
-            // @ts-ignore
-            UserId: req.session.user.id
-          })
-          .then(comment => {
-            res.status(201).json(comment)
-          })
+        .then(comment => {
+          res.status(201).json(comment)
+        })
 
-      })
-  })
-  //get comments on a post
-router.get('/:blogId/:postId/comment', (req, res) => {
+    })
+})
+//get comments on a post
+router.get('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
   models.Post.findByPk(req.params.postId)
     .then(post => {
       if (!post) {
@@ -185,9 +177,27 @@ router.get('/:blogId/:postId/comment', (req, res) => {
       })
     })
 })
+//delete comments on a post 
+router.delete('/:blogId/posts/:postId/comments/:commentId', checkAuth, (req, res) => {
+  models.Comment.destroy(
+      { where: { id: req.params.commentId} })
+      .then(rowsDeleted => {
+          if (rowsDeleted == 1) {
+              console.log('Deleted Successfully');
+              res.json(rowsDeleted);
+              return;
+          } else {
+              res.status(404).json({
+                  error: 'enter a valid id'
+              })
+          }
+      })
+      .catch(err => {
+          console.log(err);
+      })
+})
 
 router.post('/:blogId/posts/:postId/likes', checkAuth, (req, res) => {
-
   models.Post.findByPk(req.params.postId)
     .then(post => {
       if (!post) {
@@ -196,20 +206,37 @@ router.post('/:blogId/posts/:postId/likes', checkAuth, (req, res) => {
         })
         return
       }
-
-      post.createLike({
-          // @ts-ignore
-          UserId: req.session.user.id
-        })
-        .then(like => {
-          res.status(201).json(like)
-        })
-
+      models.Like.findAll({
+        where: {
+          //@ts-ignore
+          UserId: req.session.user.id,
+          PostId: req.params.postId
+        }
+      }).then(likes => {
+        if (likes.length) {
+          res.status(400).json({
+            error: 'You already like this post'
+          })
+        } else {
+          post.createLike({
+              // @ts-ignore
+              UserId: req.session.user.id
+            })
+            .then(like => {
+              res.status(201).json(like)
+            })
+          models.Dislike.destroy({
+            where: {
+              //@ts-ignore
+              UserId: req.session.user.id,
+              PostId: req.params.postId
+            }
+          })
+        }
+      })
     })
 })
-
 router.post('/:blogId/posts/:postId/dislikes', checkAuth, (req, res) => {
-
   models.Post.findByPk(req.params.postId)
     .then(post => {
       if (!post) {
@@ -218,17 +245,46 @@ router.post('/:blogId/posts/:postId/dislikes', checkAuth, (req, res) => {
         })
         return
       }
-
-      post.createDislike({
-          // @ts-ignore
-          UserId: req.session.user.id
-        })
-        .then(dislike => {
-          res.status(201).json(dislike)
-        })
-
+      models.Dislike.findAll({
+        where: {
+          //@ts-ignore
+          UserId: req.session.user.id,
+          PostId: req.params.postId
+        }
+      }).then(dislikes => {
+        if (dislikes.length) {
+          res.status(400).json({
+            error: 'You already dislike this post'
+          })
+        } else {
+          post.createDislike({
+              // @ts-ignore
+              UserId: req.session.user.id
+            })
+            .then(dislike => {
+              res.status(201).json(dislike)
+            })
+          models.Like.destroy({
+            where: {
+              //@ts-ignore
+              UserId: req.session.user.id,
+              PostId: req.params.postId
+            }
+          })
+        }
+      })
     })
 })
+
+
+
+
+
+
+
+
+
+
 
 
 
