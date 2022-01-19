@@ -3,7 +3,8 @@
 const express = require('express')
 const router = express.Router();
 const models = require('../../models')
-const checkAuth = require('../../checkAuth')
+const checkAuth = require('../../checkAuth');
+const like = require('../../models/like');
 
 //View all Blogs(list)
 router.get('/', (req, res, next) => {
@@ -134,7 +135,9 @@ router.get('/:blogId/posts', (req, res) => {
         })
         return
       }
-      blog.getPosts().then(posts => {
+      blog.getPosts({
+        include: [models.Comment, models.Like, models.Dislike]
+      }).then(posts => {
         res.json(posts)
       })
     })
@@ -182,5 +185,51 @@ router.get('/:blogId/:postId/comment', (req, res) => {
       })
     })
 })
+
+router.post('/:blogId/posts/:postId/likes', checkAuth, (req, res) => {
+
+  models.Post.findByPk(req.params.postId)
+    .then(post => {
+      if (!post) {
+        res.status(404).json({
+          error: 'could not find that post'
+        })
+        return
+      }
+
+      post.createLike({
+          // @ts-ignore
+          UserId: req.session.user.id
+        })
+        .then(like => {
+          res.status(201).json(like)
+        })
+
+    })
+})
+
+router.post('/:blogId/posts/:postId/dislikes', checkAuth, (req, res) => {
+
+  models.Post.findByPk(req.params.postId)
+    .then(post => {
+      if (!post) {
+        res.status(404).json({
+          error: 'could not find that post'
+        })
+        return
+      }
+
+      post.createDislike({
+          // @ts-ignore
+          UserId: req.session.user.id
+        })
+        .then(dislike => {
+          res.status(201).json(dislike)
+        })
+
+    })
+})
+
+
 
 module.exports = router;
