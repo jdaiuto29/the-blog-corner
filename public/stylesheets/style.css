@@ -45,3 +45,6 @@ header {
 .commentSection {
   margin: 15px;
 }
+.register {
+  border-top: double #001524;
+}
