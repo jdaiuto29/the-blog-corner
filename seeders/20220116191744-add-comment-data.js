@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('Comments', [{
       UserId: 1,
       PostId: 1,
-      BlogId: 2,
+      BlogId: 55,
       comment: 'this is a comment',
       createdAt: new Date(),
       updatedAt: new Date()
