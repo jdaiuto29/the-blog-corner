@@ -17,3 +17,4 @@ loginForm.addEventListener('submit', (e) => {
         alert(error.response.data.error || 'something went wrong')
     })
 })
+
