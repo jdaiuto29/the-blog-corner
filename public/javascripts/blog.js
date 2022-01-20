@@ -38,12 +38,12 @@ function renderPosts(posts) {
         <input type="image" src="pictures/dislike.jpeg" class="dislikeButton" data-postId="${post.id}" width="25" height="25"> ${post.Dislikes.length}
         
         <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
-        <form class="comment${post.id} d-none"><p>
+        <form class="comment${post.id} d-none" id="commentForm"><p>
         <label for="text">Comment below:</label><br>
         <textarea id="text${post.id}" required></textarea>
         </p>
         <p class="createdAt"></p>
-        <button type="submit" id="submitButton" data-postId="${post.id}">Submit Comment</button></form>
+        <button type="submit" id="submitButton" data-postId="${post.id}" onclick="submitForm()">Submit Comment</button></form>
         </div>
     </div>`
             }).join('')
@@ -62,7 +62,7 @@ function renderComments(comments, postId) {
         <div>${comment.comment}</div>
         <div>${comment.UserId}</div>
         <div>${comment.createdAt}</div>
-        <button class="DELETE${comment.id}" data-commentId="${comment.id}">Delete comment</button>`
+        <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>`
     }).join('')
     document.querySelector(`#list-of-comments${postId}`).innerHTML = html
 }
@@ -95,7 +95,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
                 .then(res => {
                     renderPosts(res.data)
                 })
-            })
+        })
         .catch(error => {
             //on error
             console.log(error.response)
@@ -127,44 +127,45 @@ const commentButtonTimeout = setTimeout(() => {
 }, 2000);
 
 document.addEventListener('click', e => {
-  if (e.target.classList.contains("likeButton")) {
-    axios.post(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/likes`, {
-        likes: e.target.value
-      }).then(res => {
-        alert('you liked this post!')
-      })
-      .catch(error => {
-        alert('you liked this post already!')
-      })
-  }
+    if (e.target.classList.contains("likeButton")) {
+        axios.post(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/likes`, {
+            likes: e.target.value
+        }).then(res => {
+            alert('you liked this post!')
+        })
+            .catch(error => {
+                alert('you liked this post already!')
+            })
+    }
 })
 document.addEventListener('click', e => {
-  if (e.target.classList.contains("dislikeButton")) {
-    axios.post(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/dislikes`, {
-        dislikes: e.target.value
-      }).then(res => {
-        alert('you disliked this post!')
-      })
-      .catch(error => {
-        alert('you disliked this post already!')
-      })
-  }
+    if (e.target.classList.contains("dislikeButton")) {
+        axios.post(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/dislikes`, {
+            dislikes: e.target.value
+        }).then(res => {
+            alert('you disliked this post!')
+        })
+            .catch(error => {
+                alert('you disliked this post already!')
+            })
+    }
 })
 
 
 
-//to remove a comment. NOT WORKING YET
+//to remove a comment
 document.addEventListener("click", e => {
-    console.log(e)
-    if (e.target.classList.value == `DELETE${comment.id}`){
-        axios.delete(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments/${e.target.classList.value}`, {
+    if (e.target.classList.contains(`DELETE`)) {
+        axios.delete(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments/${e.target.dataset.commentid}`, {
         })
-        .then(res => {
-            axios.get(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments`)
-                .then(comments => {
-                    renderComments(comments.data, e.target.dataset.postid);
-                })
+            .then(res => {
+                axios.get(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments`)
+                    .then(comments => {
+                        renderComments(comments.data, e.target.dataset.postid);
+                    })
             })
-    }}
-    )
+    }
+})
+
+
 

@@ -162,6 +162,7 @@ router.post('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
 
     })
 })
+
 //get comments on a post
 router.get('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
   models.Post.findByPk(req.params.postId)
@@ -177,6 +178,7 @@ router.get('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
       })
     })
 })
+
 //delete comments on a post 
 router.delete('/:blogId/posts/:postId/comments/:commentId', checkAuth, (req, res) => {
   models.Comment.destroy(
