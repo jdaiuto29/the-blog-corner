@@ -43,7 +43,7 @@ function renderPosts(posts) {
         <textarea id="text${post.id}" required></textarea>
         </p>
         <p class="createdAt"></p>
-        <button type="submit" id="submitButton" data-postId="${post.id}" onclick="submitForm()">Submit Comment</button></form>
+        <button type="submit" id="submitButton" data-postId="${post.id}" >Submit Comment</button></form>
         </div>
     </div>`
             }).join('')
@@ -63,7 +63,8 @@ function renderComments(comments, postId) {
         <div>${comment.UserId}</div>
         <div>${comment.createdAt}</div>
         <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>`
-    }).join('')
+    })
+    .join('')
     document.querySelector(`#list-of-comments${postId}`).innerHTML = html
 }
 
@@ -102,7 +103,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
             //display error
             alert(error.response.data.error || 'Something went wrong')
         })
-
+        
 })
 //used timeout so that form can find 'submitButton' after posts have been rendered
 const commentButtonTimeout = setTimeout(() => {
@@ -123,6 +124,10 @@ const commentButtonTimeout = setTimeout(() => {
         if (e.target.classList.value == 'commentButton' && e.target.dataset.postid) {
             document.querySelector(`.comment${e.target.dataset.postid}`).classList.remove('d-none');
         }
+        if (e.target.id == 'submitButton' && e.target.dataset.postid) {
+            document.querySelector(`.comment${e.target.dataset.postid}`).classList.add('d-none');
+        }
+        
     })
 }, 2000);
 
