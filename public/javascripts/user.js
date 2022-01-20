@@ -1,4 +1,13 @@
-
+// function renderPfp(users) {
+//     const pfp = users.map (user => {
+//         return `   
+//         <a href="profile.html" class="d-block link-dark text-decoration-none dropdown-toggle logged-in-only" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+//         <img onerror='this.src="pictures/no-image.jpeg"' src="${user.profilePicture}" height="45px" width="45px">
+//         </a>
+//         `
+//     }).join('')
+//     document.querySelector('.pfp').innerHTML = pfp
+// }
 const user = JSON.parse(window.localStorage.getItem('user'))
 //if true
 if (user) {
@@ -8,6 +17,7 @@ if (user) {
     for (const element of loggedInElements) {
         // console.log(element)
         element.classList.remove('d-none')
+        
     }
 } else {
     //find all '.logged-out-only' elements
