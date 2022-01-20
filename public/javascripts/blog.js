@@ -18,17 +18,15 @@ const id = new URLSearchParams(location.search).get('id')
 
 //trying to make the blog title show up at the top
 
-// function renderTitle(blogs) {
-//   console.log(blogs.title)
-//   const html = blogs.map(blog => {
-//     return `<h4 id="blogTitle">${blog.title}</h4>`
-//   }).join('')
-//   document.querySelector('#title').innerHTML = html
-// }
-// axios.get(`api/v1/blogs/${id}`)
-// .then(res => {
-//   renderTitle(res.data)
-// })
+function renderTitle(blog) {
+  console.log(blog.title) 
+    const html = `<h4 id="blogTitle">${blog.title}</h4>`
+  document.querySelector('#title').innerHTML = html
+}
+axios.get(`api/v1/blogs/${id}`)
+.then(res => {
+  renderTitle(res.data)
+})
 
 function renderPosts(posts) {
 
@@ -77,10 +75,10 @@ function renderPosts(posts) {
     })
 }
 
-axios.get(`/api/v1/blogs/${id}`)
-  .then(res => {
-    renderBlogs(res.data)
-  })
+// axios.get(`/api/v1/blogs/${id}`)
+//   .then(res => {
+//     renderBlogs(res.data)
+//   })
 
 function renderComments(comments, postId) {
   const html = comments.map(comment => {
@@ -103,10 +101,10 @@ function renderLikes(posts, postId) {
 }
 
 
-axios.get(`/api/v1/blogs/${id}`)
-  .then(res => {
-    renderBlogs(res.data)
-  })
+// axios.get(`/api/v1/blogs/${id}`)
+//   .then(res => {
+//     renderBlogs(res.data)
+//   })
 
 axios.get(`/api/v1/blogs/${id}/posts`)
   .then(res => {

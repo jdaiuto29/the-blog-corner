@@ -11,6 +11,7 @@ const store = new SequelizeSession({ db: db.sequelize })
 const blogsApiRouter = require('./routes/api/blog');
 const usersApiRouter = require('./routes/api/user');
 const indexRouter = require('./routes/index');
+const postsApiRouter = require('./routes/api/posts')
 const cors = require("cors");
 
 
@@ -43,5 +44,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/v1/blogs', blogsApiRouter)
 app.use('/api/v1/users', usersApiRouter)
+app.use('/api/v1/posts', postsApiRouter)
 
 module.exports = app;
