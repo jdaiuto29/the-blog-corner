@@ -37,7 +37,7 @@ router.get('/:id', (req, res, next) => {
     .catch(e => {
       // if there are any errors, log them to the server console
       console.error(e)
-      // and send a 500 error response
+        // and send a 500 error response
       res.status(500).json({
         error: 'Server Error'
       })
@@ -91,32 +91,32 @@ router.get('/:id', (req, res, next) => {
 // });
 //create posts
 router.post('/:blogId/posts', checkAuth, (req, res) => {
-  if (!req.body.text) {
-    res.status(400).json({
-      error: 'Please include all required fields'
-    })
-    return
-  }
-  models.Blog.findByPk(req.params.blogId)
-    .then(blog => {
-      if (!blog) {
-        res.status(404).json({
-          error: 'could not find that blog'
-        })
-        return
-      }
-      blog.createPost({
-        text: req.body.text,
-        // @ts-ignore
-        UserId: req.session.user.id
+    if (!req.body.text) {
+      res.status(400).json({
+        error: 'Please include all required fields'
       })
-        .then(post => {
-          res.status(201).json(post)
-        })
+      return
+    }
+    models.Blog.findByPk(req.params.blogId)
+      .then(blog => {
+        if (!blog) {
+          res.status(404).json({
+            error: 'could not find that blog'
+          })
+          return
+        }
+        blog.createPost({
+            text: req.body.text,
+            // @ts-ignore
+            UserId: req.session.user.id
+          })
+          .then(post => {
+            res.status(201).json(post)
+          })
 
-    })
-})
-// get all posts
+      })
+  })
+  // get all posts
 router.get('/:blogId/posts', (req, res) => {
   models.Blog.findByPk(req.params.blogId)
     .then(blog => {
@@ -127,7 +127,9 @@ router.get('/:blogId/posts', (req, res) => {
         return
       }
       blog.getPosts({
-        order: [["createdAt", "DESC"]],
+        order: [
+          ["createdAt", "DESC"]
+        ],
         include: [models.Comment, models.Like, models.Dislike]
       }).then(posts => {
         res.json(posts)
@@ -137,64 +139,63 @@ router.get('/:blogId/posts', (req, res) => {
 
 // create comments on a post
 router.post('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
-  if (!req.body.comment) {
-    res.status(400).json({
-      error: 'Please include text'
-    })
-    return
-  }
-  models.Post.findByPk(req.params.postId)
-    .then(post => {
-      if (!post) {
-        res.status(404).json({
-          error: 'could not find that post'
-        })
-        return
-      }
-      post.createComment({
-        comment: req.body.comment,
-        // @ts-ignore
-        UserId: req.session.user.id
+    if (!req.body.comment) {
+      res.status(400).json({
+        error: 'Please include text'
       })
-        .then(comment => {
-          res.status(201).json(comment)
-        })
+      return
+    }
+    models.Post.findByPk(req.params.postId)
+      .then(post => {
+        if (!post) {
+          res.status(404).json({
+            error: 'could not find that post'
+          })
+          return
+        }
+        post.createComment({
+            comment: req.body.comment,
+            // @ts-ignore
+            UserId: req.session.user.id
+          })
+          .then(comment => {
+            res.status(201).json(comment)
+          })
 
-    })
-})
-//get comments on a post
+      })
+  })
+  //get comments on a post
 router.get('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
-  models.Post.findByPk(req.params.postId)
-    .then(post => {
-      if (!post) {
-        res.status(404).json({
-          error: 'Could not find post with that id'
+    models.Post.findByPk(req.params.postId)
+      .then(post => {
+        if (!post) {
+          res.status(404).json({
+            error: 'Could not find post with that id'
+          })
+          return
+        }
+        post.getComments().then(comments => {
+          res.json(comments)
         })
-        return
-      }
-      post.getComments().then(comments => {
-        res.json(comments)
       })
-    })
-})
-//delete comments on a post 
+  })
+  //delete comments on a post 
 router.delete('/:blogId/posts/:postId/comments/:commentId', checkAuth, (req, res) => {
-  models.Comment.destroy(
-      { where: { id: req.params.commentId} })
-      .then(rowsDeleted => {
-          if (rowsDeleted == 1) {
-              console.log('Deleted Successfully');
-              res.json(rowsDeleted);
-              return;
-          } else {
-              res.status(404).json({
-                  error: 'enter a valid id'
-              })
-          }
-      })
-      .catch(err => {
-          console.log(err);
-      })
+  models.Comment.destroy({ where: { id: req.params.commentId } })
+    .then(rowsDeleted => {
+      if (rowsDeleted == 1) {
+        console.log('Deleted Successfully');
+        res.json(rowsDeleted);
+        return;
+      } else {
+        res.status(404).json({
+          error: 'enter a valid id'
+        })
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    })
 })
 
 router.post('/:blogId/posts/:postId/likes', checkAuth, (req, res) => {
