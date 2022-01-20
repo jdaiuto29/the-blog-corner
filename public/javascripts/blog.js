@@ -74,10 +74,10 @@ function renderPosts(posts) {
     })
 }
 
-axios.get(`/api/v1/blogs/${id}`)
-  .then(res => {
-    renderBlogs(res.data)
-  })
+// axios.get(`/api/v1/blogs/${id}`)
+//   .then(res => {
+//     renderBlogs(res.data)
+//   })
 
 function renderComments(comments, postId) {
   const html = comments.map(comment => {
