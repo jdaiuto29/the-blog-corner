@@ -1,9 +1,32 @@
 // get id out of URL query parameters
+
+function renderBlogs(blogs) {
+  const html = blogs.map(blog => {
+      return `<li><a href="/blog.html?id=${blog.id}">${blog.title}</a></li>`
+  }).join('')
+  document.querySelector('#blogs').innerHTML = html
+}
+
+axios.get('/api/v1/blogs')
+  .then(res => {
+      renderBlogs(res.data)
+  })
+
+
+
 const id = new URLSearchParams(location.search).get('id')
 
-function renderBlogs(blog) {
-  document.querySelector('#title').innerHTML = blog.title
+//trying to make the blog title show up at the top
+
+function renderTitle(blog) {
+  console.log(blog.title) 
+    const html = `<h4 id="blogTitle">${blog.title}</h4>`
+  document.querySelector('#title').innerHTML = html
 }
+axios.get(`api/v1/blogs/${id}`)
+.then(res => {
+  renderTitle(res.data)
+})
 
 function renderPosts(posts) {
 
@@ -30,31 +53,32 @@ function renderPosts(posts) {
             renderComments(comments.data, post.id);
           })
 
-        return `<div>
-        <div><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
-        <div>${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${new Date(post.createdAt).toLocaleString()})</div>
-        <div> ${post.text}</div>
-        <input type="image" src="pictures/like.jpeg" class="likeButton"  data-postId="${post.id}" width="25" height="25"><span id="like-counter${post.id}">${post.Likes.length}</span>&emsp;
-        <input type="image" src="pictures/dislike.jpeg" class="dislikeButton"  data-postId="${post.id}" width="25" height="25"> <span id="dislike-counter${post.id}">${post.Dislikes.length}</span>
-        
-        <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
-        <form class="comment${post.id} d-none" id="commentForm"><p>
-        <label for="text">Comment below:</label><br>
-        <textarea id="text${post.id}" required></textarea>
-        </p>
-        <p class="createdAt"></p>
-        <button type="submit" id="submitButton" data-postId="${post.id}" >Submit Comment</button></form>
-        </div>
-    </div>`
-      }).join('')
+          return `<div class = "singlePost" >
+        <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
+      <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${post.createdAt.replace('T', ' @ ').slice(0,18)})</div>
+      <div> ${post.text}</div>
+      <input type="image" src="pictures/like.jpeg" class="likeButton" data-postId="${post.id}" width="25" height="25"> ${post.Likes.length}&emsp;
+      <input type="image" src="pictures/dislike.jpeg" class="dislikeButton" data-postId="${post.id}" width="25" height="25"> ${post.Dislikes.length}
+      
+      <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
+      <form class="comment${post.id} d-none"><p>
+      <label for="text">Comment below:</label><br>
+      <textarea id="text${post.id}" required></textarea>
+      </p>
+      <p class="createdAt"></p>
+      <button type="submit" id="submitButton" data-postId="${post.id}">Submit Comment</button></form>
+      </div>
+  </div>`
+        }).join('')
+        //figure out where to put info
       document.querySelector('.blogPosts').innerHTML = html
     })
 }
 
-axios.get(`/api/v1/blogs/${id}`)
-  .then(res => {
-    renderBlogs(res.data)
-  })
+// axios.get(`/api/v1/blogs/${id}`)
+//   .then(res => {
+//     renderBlogs(res.data)
+//   })
 
 function renderComments(comments, postId) {
   const html = comments.map(comment => {
@@ -77,10 +101,10 @@ function renderLikes(posts, postId) {
 }
 
 
-axios.get(`/api/v1/blogs/${id}`)
-  .then(res => {
-    renderBlogs(res.data)
-  })
+// axios.get(`/api/v1/blogs/${id}`)
+//   .then(res => {
+//     renderBlogs(res.data)
+//   })
 
 axios.get(`/api/v1/blogs/${id}/posts`)
   .then(res => {
@@ -138,6 +162,8 @@ const commentButtonTimeout = setTimeout(() => {
     }
   })
 }, 2000);
+
+
 
 document.addEventListener('click', e => {
   if (e.target.classList.contains("likeButton")) {
