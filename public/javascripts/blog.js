@@ -1,9 +1,34 @@
 // get id out of URL query parameters
+
+function renderBlogs(blogs) {
+  const html = blogs.map(blog => {
+      return `<li><a href="/blog.html?id=${blog.id}">${blog.title}</a></li>`
+  }).join('')
+  document.querySelector('#blogs').innerHTML = html
+}
+
+axios.get('/api/v1/blogs')
+  .then(res => {
+      renderBlogs(res.data)
+  })
+
+
+
 const id = new URLSearchParams(location.search).get('id')
 
-function renderBlogs(blog) {
-  document.querySelector('#title').innerHTML = blog.title
-}
+//trying to make the blog title show up at the top
+
+// function renderTitle(blogs) {
+//   console.log(blogs.title)
+//   const html = blogs.map(blog => {
+//     return `<h4 id="blogTitle">${blog.title}</h4>`
+//   }).join('')
+//   document.querySelector('#title').innerHTML = html
+// }
+// axios.get(`api/v1/blogs/${id}`)
+// .then(res => {
+//   renderTitle(res.data)
+// })
 
 function renderPosts(posts) {
 
@@ -30,9 +55,9 @@ function renderPosts(posts) {
               renderComments(comments.data, post.id);
             })
 
-          return `<div>
-        <div class = "singlePost ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
-      <div>${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${post.createdAt.replace('T', ' @ ').slice(0,18)})</div>
+          return `<div class = "singlePost" >
+        <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
+      <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${post.createdAt.replace('T', ' @ ').slice(0,18)})</div>
       <div> ${post.text}</div>
       <input type="image" src="pictures/like.jpeg" class="likeButton" data-postId="${post.id}" width="25" height="25"> ${post.Likes.length}&emsp;
       <input type="image" src="pictures/dislike.jpeg" class="dislikeButton" data-postId="${post.id}" width="25" height="25"> ${post.Dislikes.length}
