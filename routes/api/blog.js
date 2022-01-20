@@ -139,28 +139,28 @@ router.get('/:blogId/posts', (req, res) => {
 
 // create comments on a post
 router.post('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
-    if (!req.body.comment) {
-      res.status(400).json({
-        error: 'Please include text'
-      })
-      return
-    }
-    models.Post.findByPk(req.params.postId)
-      .then(post => {
-        if (!post) {
-          res.status(404).json({
-            error: 'could not find that post'
-          })
-          return
-        }
-        post.createComment({
-            comment: req.body.comment,
-            // @ts-ignore
-            UserId: req.session.user.id
-          })
-          .then(comment => {
-            res.status(201).json(comment)
-          })
+  if (!req.body.comment) {
+    res.status(400).json({
+      error: 'Please include text'
+    })
+    return
+  }
+  models.Post.findByPk(req.params.postId)
+    .then(post => {
+      if (!post) {
+        res.status(404).json({
+          error: 'could not find that post'
+        })
+        return
+      }
+      post.createComment({
+          comment: req.body.comment,
+          // @ts-ignore
+          UserId: req.session.user.id
+        })
+        .then(comment => {
+          res.status(201).json(comment)
+        })
 
     })
 })
