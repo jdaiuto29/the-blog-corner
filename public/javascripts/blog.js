@@ -38,12 +38,12 @@ function renderPosts(posts) {
         <input type="image" src="pictures/dislike.jpeg" class="dislikeButton"  data-postId="${post.id}" width="25" height="25"> <span id="dislike-counter${post.id}">${post.Dislikes.length}</span>
         
         <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
-        <form class="comment${post.id} d-none"><p>
+        <form class="comment${post.id} d-none" id="commentForm"><p>
         <label for="text">Comment below:</label><br>
         <textarea id="text${post.id}" required></textarea>
         </p>
         <p class="createdAt"></p>
-        <button type="submit" id="submitButton" data-postId="${post.id}">Submit Comment</button></form>
+        <button type="submit" id="submitButton" data-postId="${post.id}" >Submit Comment</button></form>
         </div>
     </div>`
       }).join('')
@@ -62,9 +62,10 @@ function renderComments(comments, postId) {
         <div>${comment.comment}</div>
         <div>${comment.UserId}</div>
         <div>${comment.createdAt}</div>
-        <button class="DELETE${comment.id}" data-commentId="${comment.id}">Delete comment</button>`
-  }).join('')
-  document.querySelector(`#list-of-comments${postId}`).innerHTML = html
+        <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>`
+    })
+    .join('')
+    document.querySelector(`#list-of-comments${postId}`).innerHTML = html
 }
 
 function renderLikes(posts, postId) {
@@ -93,27 +94,27 @@ document.querySelector('#postForm').addEventListener('submit', e => {
     axios.post(`/api/v1/blogs/${id}/posts`, {
         text: document.querySelector("#text").value,
         createdAt: document.querySelector(".createdAt").value
-      })
-      .then(res => {
-        // on success display success message
-        const reviewToast = document.querySelector('#reviewToast')
-        const toast = new bootstrap.Toast(reviewToast)
-        toast.show()
-          // update page with new post
-        axios.get(`/api/v1/blogs/${id}/posts`)
-          .then(res => {
-            renderPosts(res.data)
-          })
-      })
-      .catch(error => {
-        //on error
-        console.log(error.response)
-          //display error
-        alert(error.response.data.error || 'Something went wrong')
-      })
-
-  })
-  //used timeout so that form can find 'submitButton' after posts have been rendered
+    })
+        .then(res => {
+            // on success display success message
+            const reviewToast = document.querySelector('#reviewToast')
+            const toast = new bootstrap.Toast(reviewToast)
+            toast.show()
+            // update page with new post
+            axios.get(`/api/v1/blogs/${id}/posts`)
+                .then(res => {
+                    renderPosts(res.data)
+                })
+        })
+        .catch(error => {
+            //on error
+            console.log(error.response)
+            //display error
+            alert(error.response.data.error || 'Something went wrong')
+        })
+        
+})
+//used timeout so that form can find 'submitButton' after posts have been rendered
 const commentButtonTimeout = setTimeout(() => {
   document.addEventListener('click', e => {
     if (e.target.id == 'submitButton') {
@@ -131,6 +132,9 @@ const commentButtonTimeout = setTimeout(() => {
 
     if (e.target.classList.value == 'commentButton' && e.target.dataset.postid) {
       document.querySelector(`.comment${e.target.dataset.postid}`).classList.remove('d-none');
+    }
+    if (e.target.id == 'submitButton' && e.target.dataset.postid) {
+        document.querySelector(`.comment${e.target.dataset.postid}`).classList.add('d-none');
     }
   })
 }, 2000);
@@ -172,16 +176,19 @@ document.addEventListener('click', e => {
 
 
 
-// //to remove a comment. NOT WORKING YET
-// document.addEventListener("click", e => {
-//   console.log(e)
-//   if (e.target.classList.value == `DELETE${comment.id}`) {
-//     axios.delete(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments/${e.target.classList.value}`, {})
-//       .then(res => {
-//         axios.get(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments`)
-//           .then(comments => {
-//             renderComments(comments.data, e.target.dataset.postid);
-//           })
-//       })
-//   }
-// })
+//to remove a comment
+document.addEventListener("click", e => {
+    if (e.target.classList.contains(`DELETE`)) {
+        axios.delete(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments/${e.target.dataset.commentid}`, {
+        })
+            .then(res => {
+                axios.get(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments`)
+                    .then(comments => {
+                        renderComments(comments.data, e.target.dataset.postid);
+                    })
+            })
+    }
+})
+
+
+
