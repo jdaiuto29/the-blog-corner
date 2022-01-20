@@ -89,43 +89,34 @@ router.get('/:id', (req, res, next) => {
 //             })
 //         })
 // });
-
+//create posts
 router.post('/:blogId/posts', checkAuth, (req, res) => {
-  if (!req.body.text) {
-    res.status(400).json({
-      error: 'Please include all required fields'
-    })
-    return
-  }
-  models.Blog.findByPk(req.params.blogId)
-    .then(blog => {
-      if (!blog) {
-        res.status(404).json({
-          error: 'could not find that blog'
-        })
-        return
-      }
-      models.Blog.findByPk(req.params.blogId)
-        .then(blog => {
-          if (!blog) {
-            res.status(404).json({
-              error: 'could not find that blog'
-            })
-            return
-          }
-          blog.createPost({
-              text: req.body.text,
-              // @ts-ignore
-              UserId: req.session.user.id
-            })
-            .then(post => {
-              res.status(201).json(post)
-            })
+    if (!req.body.text) {
+      res.status(400).json({
+        error: 'Please include all required fields'
+      })
+      return
+    }
+    models.Blog.findByPk(req.params.blogId)
+      .then(blog => {
+        if (!blog) {
+          res.status(404).json({
+            error: 'could not find that blog'
+          })
+          return
+        }
+        blog.createPost({
+            text: req.body.text,
+            // @ts-ignore
+            UserId: req.session.user.id
+          })
+          .then(post => {
+            res.status(201).json(post)
+          })
 
-        })
-    })
-})
-
+      })
+  })
+  // get all posts
 router.get('/:blogId/posts', (req, res) => {
   models.Blog.findByPk(req.params.blogId)
     .then(blog => {
@@ -136,6 +127,9 @@ router.get('/:blogId/posts', (req, res) => {
         return
       }
       blog.getPosts({
+        order: [
+          ["createdAt", "DESC"]
+        ],
         include: [models.Comment, models.Like, models.Dislike]
       }).then(posts => {
         res.json(posts)
@@ -144,7 +138,7 @@ router.get('/:blogId/posts', (req, res) => {
 })
 
 // create comments on a post
-router.post('/:blogId/:postId/comment', checkAuth, (req, res) => {
+router.post('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
     if (!req.body.comment) {
       res.status(400).json({
         error: 'Please include text'
@@ -168,67 +162,133 @@ router.post('/:blogId/:postId/comment', checkAuth, (req, res) => {
             res.status(201).json(comment)
           })
 
+    })
+})
+
+//get comments on a post
+router.get('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
+    models.Post.findByPk(req.params.postId)
+      .then(post => {
+        if (!post) {
+          res.status(404).json({
+            error: 'Could not find post with that id'
+          })
+          return
+        }
+        post.getComments().then(comments => {
+          res.json(comments)
+        })
       })
   })
-  //get comments on a post
-router.get('/:blogId/:postId/comment', (req, res) => {
+  //delete comments on a post 
+router.delete('/:blogId/posts/:postId/comments/:commentId', checkAuth, (req, res) => {
+  models.Comment.destroy({ where: { id: req.params.commentId } })
+    .then(rowsDeleted => {
+      if (rowsDeleted == 1) {
+        console.log('Deleted Successfully');
+        res.json(rowsDeleted);
+        return;
+      } else {
+        res.status(404).json({
+          error: 'enter a valid id'
+        })
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    })
+})
+
+
+
+router.post('/:blogId/posts/:postId/likes', checkAuth, (req, res) => {
   models.Post.findByPk(req.params.postId)
     .then(post => {
       if (!post) {
         res.status(404).json({
-          error: 'Could not find post with that id'
+          error: 'could not find that post'
         })
         return
       }
-      post.getComments().then(comments => {
-        res.json(comments)
+      models.Like.findAll({
+        where: {
+          //@ts-ignore
+          UserId: req.session.user.id,
+          PostId: req.params.postId
+        }
+      }).then(likes => {
+        if (likes.length) {
+          res.status(400).json({
+            error: 'You already like this post'
+          })
+        } else {
+          post.createLike({
+              // @ts-ignore
+              UserId: req.session.user.id
+            })
+            .then(like => {
+              res.status(201).json(like)
+            })
+          models.Dislike.destroy({
+            where: {
+              //@ts-ignore
+              UserId: req.session.user.id,
+              PostId: req.params.postId
+            }
+          })
+        }
+      })
+    })
+})
+router.post('/:blogId/posts/:postId/dislikes', checkAuth, (req, res) => {
+  models.Post.findByPk(req.params.postId)
+    .then(post => {
+      if (!post) {
+        res.status(404).json({
+          error: 'could not find that post'
+        })
+        return
+      }
+      models.Dislike.findAll({
+        where: {
+          //@ts-ignore
+          UserId: req.session.user.id,
+          PostId: req.params.postId
+        }
+      }).then(dislikes => {
+        if (dislikes.length) {
+          res.status(400).json({
+            error: 'You already dislike this post'
+          })
+        } else {
+          post.createDislike({
+              // @ts-ignore
+              UserId: req.session.user.id
+            })
+            .then(dislike => {
+              res.status(201).json(dislike)
+            })
+          models.Like.destroy({
+            where: {
+              //@ts-ignore
+              UserId: req.session.user.id,
+              PostId: req.params.postId
+            }
+          })
+        }
       })
     })
 })
 
-router.post('/:blogId/posts/:postId/likes', checkAuth, (req, res) => {
 
-  models.Post.findByPk(req.params.postId)
-    .then(post => {
-      if (!post) {
-        res.status(404).json({
-          error: 'could not find that post'
-        })
-        return
-      }
 
-      post.createLike({
-          // @ts-ignore
-          UserId: req.session.user.id
-        })
-        .then(like => {
-          res.status(201).json(like)
-        })
 
-    })
-})
 
-router.post('/:blogId/posts/:postId/dislikes', checkAuth, (req, res) => {
 
-  models.Post.findByPk(req.params.postId)
-    .then(post => {
-      if (!post) {
-        res.status(404).json({
-          error: 'could not find that post'
-        })
-        return
-      }
 
-      post.createDislike({
-          // @ts-ignore
-          UserId: req.session.user.id
-        })
-        .then(dislike => {
-          res.status(201).json(dislike)
-        })
 
-    })
-})
+
+
 
 
 

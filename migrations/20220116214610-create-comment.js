@@ -11,27 +11,27 @@ module.exports = {
       UserId: {
         type: Sequelize.INTEGER,
         references: {
-            model: "Users",
-            key: "id"
+          model: "Users",
+          key: "id"
         },
         onDelete: "CASCADE"
-    },
-    BlogId: {
+      },
+      BlogId: {
         type: Sequelize.INTEGER,
         references: {
-            model: "Blogs",
-            key: "id"
+          model: "Blogs",
+          key: "id"
         },
         onDelete: "CASCADE"
-    },
-    PostId: {
-      type: Sequelize.INTEGER,
-      references: {
+      },
+      PostId: {
+        type: Sequelize.INTEGER,
+        references: {
           model: "Posts",
           key: "id"
+        },
+        onDelete: "CASCADE"
       },
-      onDelete: "CASCADE"
-  },
       comment: {
         type: Sequelize.TEXT
       },
