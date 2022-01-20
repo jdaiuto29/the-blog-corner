@@ -97,6 +97,7 @@ router.get('/:userId/profile', (req, res) => {
       return
     }
     res.json({
+      userId: user.id,
       firstName: user.firstName,
       email: user.email,
       reviews: user.Posts,
@@ -119,7 +120,6 @@ router.post("/:id/add-profile-picture", function(req, res) {
         },
       });
     }
-    console.log(req.file)
     let update = { profilePicture: req.file.location };
     models.User.update(update, { where: { id: uid } })
       .then((user) => res.status(200).json({ success: true, user: user }))
