@@ -1,5 +1,5 @@
 function renderProfile(user) {
-  document.querySelector('#profileInfo').innerHTML = `
+  document.querySelector('.profileInfo').innerHTML = `
   <div><img onerror='this.src="pictures/no-image.jpeg"' src="${user.profilePicture}" height="100px" width="100px"></div>  
   <form id="submitPicture">
   <input type="file" class="profilePicture"><br><br>
