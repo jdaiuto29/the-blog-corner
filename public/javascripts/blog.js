@@ -50,20 +50,20 @@ function renderPosts(posts) {
 
                 return `<div class = "singlePost" >
         <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
-      <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${post.createdAt.replace('T', ' @ ').slice(0, 18)})</div>
-      <div> ${post.text}</div>
-      <input type="image" src="pictures/like.jpeg" class="likeButton" data-postId="${post.id}" width="25" height="25"> ${post.Likes.length}&emsp;
-      <input type="image" src="pictures/dislike.jpeg" class="dislikeButton" data-postId="${post.id}" width="25" height="25"> ${post.Dislikes.length}
-      
-      <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
-      <form class="comment${post.id} d-none"><p>
-      <label for="text">Comment below:</label><br>
-      <textarea id="text${post.id}" required></textarea>
-      </p>
-      <p class="createdAt"></p>
-      <button type="submit" id="submitButton" data-postId="${post.id}">Submit Comment</button></form>
-      </div>
-  </div>`
+        <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${new Date(post.createdAt).toLocaleString()})</div>
+        <div> ${post.text}</div>
+        <input type="image" src="pictures/like.jpeg" class="likeButton" data-postId="${post.id}" width="25" height="25"> ${post.Likes.length}&emsp;
+        <input type="image" src="pictures/dislike.jpeg" class="dislikeButton" data-postId="${post.id}" width="25" height="25"> ${post.Dislikes.length}
+        
+        <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
+        <form class="comment${post.id} d-none"><p>
+        <label for="text">Comment below:</label><br>
+        <textarea id="text${post.id}" required></textarea>
+        </p>
+        <p class="createdAt"></p>
+        <button type="submit" id="submitButton" data-postId="${post.id}">Submit Comment</button></form>
+        </div>
+    </div>`
             }).join('')
             //figure out where to put info
             document.querySelector('.blogPosts').innerHTML = html
