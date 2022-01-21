@@ -87,6 +87,7 @@ function renderComments(comments, postId) {
         .then(comments => {
             const html = comments.map(comment => {
                 return `<div class="${comment.id}">
+                <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${comment.user.profilePicture}" height="45px" width="45px"></div>
                 <div>${comment.user.email.substring(0, comment.user.email.indexOf('@'))}  (${new Date(comment.createdAt).toLocaleString()})</div>
                 <div>${comment.comment}</div>
                 <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>
