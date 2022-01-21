@@ -98,7 +98,9 @@ function renderComments(comments, postId) {
                 return `<div class="${comment.id}">
                 <div>${comment.comment}</div>
                 <div>${comment.user.email.substring(0, comment.user.email.indexOf('@'))}  (${new Date(comment.createdAt).toLocaleString()})</div>
-                <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>`
+                <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>
+                <br>
+                <br>`
             })
                 .join('')
             document.querySelector(`#list-of-comments${postId}`).innerHTML = html
