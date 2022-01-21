@@ -19,7 +19,6 @@ const id = new URLSearchParams(location.search).get('id')
 //trying to make the blog title show up at the top
 
 function renderTitle(blog) {
-    console.log(blog.title)
     const html = `<h4 id="blogTitle">${blog.title}</h4>`
     document.querySelector('#title').innerHTML = html
 }
@@ -58,7 +57,7 @@ function renderPosts(posts) {
         <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
         <form class="comment${post.id} d-none "><p>
         <label for="text">Comment below:</label><br>
-        <textarea id="text${post.id}" class="w-75" required></textarea>
+        <textarea id="text${post.id}" required></textarea>
         </p>
         <p class="createdAt"></p>
         <button type="submit" id="submitButton" data-postId="${post.id}">Submit Comment</button></form>
@@ -139,7 +138,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
             //display error
             alert(error.response.data.error || 'Something went wrong')
         })
-
+        document.getElementById("text").value = "";
 })
 //used timeout so that form can find 'submitButton' after posts have been rendered
 const commentButtonTimeout = setTimeout(() => {
@@ -155,6 +154,7 @@ const commentButtonTimeout = setTimeout(() => {
                             renderComments(comments.data, e.target.dataset.postid);
                         })
                 })
+                // document.querySelectorAll(".w-75").value = "";
         }
 
         if (e.target.classList.value == 'commentButton' && e.target.dataset.postid) {
@@ -163,6 +163,7 @@ const commentButtonTimeout = setTimeout(() => {
         if (e.target.id == 'submitButton' && e.target.dataset.postid) {
             document.querySelector(`.comment${e.target.dataset.postid}`).classList.add('d-none');
         }
+        
     })
 }, 2000);
 
