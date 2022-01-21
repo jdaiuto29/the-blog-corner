@@ -29,7 +29,6 @@ axios.get(`api/v1/blogs/${id}`)
     })
 
 function renderPosts(posts) {
-
     const userDetails = posts.map(post => {
         if (!post.UserId) {
             return Promise.resolve(post)
@@ -39,23 +38,19 @@ function renderPosts(posts) {
                 return {
                     ...post,
                     user: user.data
-
                 }
-
             })
-    })
+        })
     Promise.all(userDetails)
         .then(posts => {
             const html = posts.map(post => {
-
                 axios.get(`api/v1/blogs/${id}/posts/${post.id}/comments`)
                     .then(comments => {
                         renderComments(comments.data, post.id);
-                    })
-
-                return `<div class = "singlePost" >
-          <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
-          <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${new Date(post.createdAt).toLocaleString()})</div>
+                    })  
+                    return `<div class = "singlePost" >
+        <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
+        <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${new Date(post.createdAt).toLocaleString()})</div>
         <div> ${post.text}</div>
         <input type="image" src="pictures/like.jpeg" class="likeButton"  data-postId="${post.id}" width="25" height="25"><span id="like-counter${post.id}">${post.Likes.length}</span>&emsp;
         <input type="image" src="pictures/dislike.jpeg" class="dislikeButton"  data-postId="${post.id}" width="25" height="25"> <span id="dislike-counter${post.id}">${post.Dislikes.length}</span>
@@ -74,10 +69,6 @@ function renderPosts(posts) {
         })
 }
 
-// axios.get(`/api/v1/blogs/${id}`)
-//   .then(res => {
-//     renderBlogs(res.data)
-//   })
 
 function renderComments(comments, postId) {
     const userDetails = comments.map(comment => {
@@ -96,8 +87,8 @@ function renderComments(comments, postId) {
         .then(comments => {
             const html = comments.map(comment => {
                 return `<div class="${comment.id}">
-                <div>${comment.comment}</div>
                 <div>${comment.user.email.substring(0, comment.user.email.indexOf('@'))}  (${new Date(comment.createdAt).toLocaleString()})</div>
+                <div>${comment.comment}</div>
                 <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>
                 <br>
                 <br>`
@@ -116,11 +107,6 @@ function renderLikes(posts, postId) {
     document.querySelector(`#dislike-counter${postId}`).innerHTML = post.Dislikes.length
 }
 
-
-// axios.get(`/api/v1/blogs/${id}`)
-//   .then(res => {
-//     renderBlogs(res.data)
-//   })
 
 axios.get(`/api/v1/blogs/${id}/posts`)
     .then(res => {
