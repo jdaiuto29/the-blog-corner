@@ -156,7 +156,7 @@ router.post('/:blogId/posts/:postId/comments', checkAuth, (req, res) => {
       post.createComment({
           comment: req.body.comment,
           // @ts-ignore
-          UserId: req.session.user.id
+          UserId: req.session.user.id,
         })
         .then(comment => {
           res.status(201).json(comment)
@@ -185,7 +185,6 @@ router.delete('/:blogId/posts/:postId/comments/:commentId', checkAuth, (req, res
   models.Comment.destroy({ where: { id: req.params.commentId } })
     .then(rowsDeleted => {
       if (rowsDeleted == 1) {
-        console.log('Deleted Successfully');
         res.json(rowsDeleted);
         return;
       } else {
@@ -279,17 +278,5 @@ router.post('/:blogId/posts/:postId/dislikes', checkAuth, (req, res) => {
       })
     })
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;

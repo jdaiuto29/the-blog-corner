@@ -1,4 +1,5 @@
 // get id out of URL query parameters
+const id = new URLSearchParams(location.search).get('id')
 
 function renderBlogs(blogs) {
     const html = blogs.map(blog => {
@@ -11,10 +12,6 @@ axios.get('/api/v1/blogs')
     .then(res => {
         renderBlogs(res.data)
     })
-
-
-
-const id = new URLSearchParams(location.search).get('id')
 
 //trying to make the blog title show up at the top
 
@@ -39,21 +36,20 @@ function renderPosts(posts) {
                     user: user.data
                 }
             })
-        })
+    })
     Promise.all(userDetails)
         .then(posts => {
             const html = posts.map(post => {
                 axios.get(`api/v1/blogs/${id}/posts/${post.id}/comments`)
                     .then(comments => {
                         renderComments(comments.data, post.id);
-                    })  
-                    return `<div class = "singlePost" >
+                    })
+                return `<div class = "singlePost" >
         <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
         <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${new Date(post.createdAt).toLocaleString()})</div>
         <div> ${post.text}</div>
         <input type="image" src="pictures/like.jpeg" class="likeButton"  data-postId="${post.id}" width="25" height="25"><span id="like-counter${post.id}">${post.Likes.length}</span>&emsp;
         <input type="image" src="pictures/dislike.jpeg" class="dislikeButton"  data-postId="${post.id}" width="25" height="25"> <span id="dislike-counter${post.id}">${post.Dislikes.length}</span>
-        
         <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
         <form class="comment${post.id} d-none "><p>
         <label for="text">Comment below:</label><br>
@@ -71,16 +67,16 @@ function renderPosts(posts) {
 
 function renderComments(comments, postId) {
     const userDetails = comments.map(comment => {
-        if (!comment.UserId){
+        if (!comment.UserId) {
             return Promise.resolve(comment)
         }
         return axios.get(`/api/v1/users/${comment.UserId}/profile`)
-        .then(user => {
-            return {
-                ...comment,
-                user:user.data
-            }
-        })
+            .then(user => {
+                return {
+                    ...comment,
+                    user: user.data
+                }
+            })
     })
     Promise.all(userDetails)
         .then(comments => {
@@ -96,7 +92,11 @@ function renderComments(comments, postId) {
                 .join('')
             document.querySelector(`#list-of-comments${postId}`).innerHTML = html
         })
-    
+
+}
+
+function renderUserData(userData, commentData) {
+  document.querySelector(`.userDataDiv${commentData.id}`).innerHTML = `<a href = "/profile.html?id=${userData.id}" > ${userData.email.substring(0, userData.email.indexOf('@'))} </a>`
 }
 
 function renderLikes(posts, postId) {
@@ -138,7 +138,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
             //display error
             alert(error.response.data.error || 'Something went wrong')
         })
-        document.getElementById("text").value = "";
+    document.getElementById("text").value = "";
 })
 //used timeout so that form can find 'submitButton' after posts have been rendered
 const commentButtonTimeout = setTimeout(() => {
@@ -154,7 +154,7 @@ const commentButtonTimeout = setTimeout(() => {
                             renderComments(comments.data, e.target.dataset.postid);
                         })
                 })
-                // document.querySelectorAll(".w-75").value = "";
+            // document.querySelectorAll(".w-75").value = "";
         }
 
         if (e.target.classList.value == 'commentButton' && e.target.dataset.postid) {
@@ -163,7 +163,7 @@ const commentButtonTimeout = setTimeout(() => {
         if (e.target.id == 'submitButton' && e.target.dataset.postid) {
             document.querySelector(`.comment${e.target.dataset.postid}`).classList.add('d-none');
         }
-        
+
     })
 }, 2000);
 

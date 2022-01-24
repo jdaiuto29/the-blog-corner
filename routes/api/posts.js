@@ -9,8 +9,8 @@ const like = require('../../models/like');
 //View all Blogs(list)
 router.get('/', (req, res, next) => {
   models.Post.findAll({
-    include: [models.Blog, models.User, models.Like, models.Dislike]
-  })
+      include: [models.Blog, models.Like, models.Dislike, models.Comment]
+    })
     .then(posts => {
       res.json(posts)
     })
