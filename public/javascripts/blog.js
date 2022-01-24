@@ -39,15 +39,15 @@ function renderPosts(posts) {
                     user: user.data
                 }
             })
-        })
+    })
     Promise.all(userDetails)
         .then(posts => {
             const html = posts.map(post => {
                 axios.get(`api/v1/blogs/${id}/posts/${post.id}/comments`)
                     .then(comments => {
                         renderComments(comments.data, post.id);
-                    })  
-                    return `<div class = "singlePost" >
+                    })
+                return `<div class = "singlePost" >
         <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
         <div class = "titlePost">${post.user.email.substring(0, post.user.email.indexOf('@'))}  (${new Date(post.createdAt).toLocaleString()})</div>
         <div> ${post.text}</div>
@@ -71,16 +71,16 @@ function renderPosts(posts) {
 
 function renderComments(comments, postId) {
     const userDetails = comments.map(comment => {
-        if (!comment.UserId){
+        if (!comment.UserId) {
             return Promise.resolve(comment)
         }
         return axios.get(`/api/v1/users/${comment.UserId}/profile`)
-        .then(user => {
-            return {
-                ...comment,
-                user:user.data
-            }
-        })
+            .then(user => {
+                return {
+                    ...comment,
+                    user: user.data
+                }
+            })
     })
     Promise.all(userDetails)
         .then(comments => {
@@ -96,7 +96,7 @@ function renderComments(comments, postId) {
                 .join('')
             document.querySelector(`#list-of-comments${postId}`).innerHTML = html
         })
-    
+
 }
 
 function renderLikes(posts, postId) {
@@ -138,7 +138,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
             //display error
             alert(error.response.data.error || 'Something went wrong')
         })
-        document.getElementById("text").value = "";
+    document.getElementById("text").value = "";
 })
 //used timeout so that form can find 'submitButton' after posts have been rendered
 const commentButtonTimeout = setTimeout(() => {
@@ -154,7 +154,7 @@ const commentButtonTimeout = setTimeout(() => {
                             renderComments(comments.data, e.target.dataset.postid);
                         })
                 })
-                // document.querySelectorAll(".w-75").value = "";
+            // document.querySelectorAll(".w-75").value = "";
         }
 
         if (e.target.classList.value == 'commentButton' && e.target.dataset.postid) {
@@ -163,7 +163,7 @@ const commentButtonTimeout = setTimeout(() => {
         if (e.target.id == 'submitButton' && e.target.dataset.postid) {
             document.querySelector(`.comment${e.target.dataset.postid}`).classList.add('d-none');
         }
-        
+
     })
 }, 2000);
 
