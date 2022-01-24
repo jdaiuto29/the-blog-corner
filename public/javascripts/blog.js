@@ -1,4 +1,5 @@
 // get id out of URL query parameters
+const id = new URLSearchParams(location.search).get('id')
 
 function renderBlogs(blogs) {
   const html = blogs.map(blog => {
@@ -12,14 +13,9 @@ axios.get('/api/v1/blogs')
     renderBlogs(res.data)
   })
 
-
-
-const id = new URLSearchParams(location.search).get('id')
-
 //trying to make the blog title show up at the top
 
 function renderTitle(blog) {
-  console.log(blog.title)
   const html = `<h4 id="blogTitle">${blog.title}</h4>`
   document.querySelector('#title').innerHTML = html
 }
@@ -47,7 +43,6 @@ function renderPosts(posts) {
   Promise.all(userDetails)
     .then(posts => {
       const html = posts.map(post => {
-
         axios.get(`api/v1/blogs/${id}/posts/${post.id}/comments`)
           .then(comments => {
             renderComments(comments.data, post.id);
@@ -59,7 +54,6 @@ function renderPosts(posts) {
         <div> ${post.text}</div>
         <input type="image" src="pictures/like.jpeg" class="likeButton"  data-postId="${post.id}" width="25" height="25"><span id="like-counter${post.id}">${post.Likes.length}</span>&emsp;
         <input type="image" src="pictures/dislike.jpeg" class="dislikeButton"  data-postId="${post.id}" width="25" height="25"> <span id="dislike-counter${post.id}">${post.Dislikes.length}</span>
-        
         <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
         <form class="comment${post.id} d-none"><p>
         <label for="text">Comment below:</label><br>
@@ -71,39 +65,38 @@ function renderPosts(posts) {
     </div>`
       }).join('')
       document.querySelector('.blogPosts').innerHTML = html
+
     })
 }
 
-// axios.get(`/api/v1/blogs/${id}`)
-//   .then(res => {
-//     renderBlogs(res.data)
-//   })
-
 function renderComments(comments, postId) {
   const html = comments.map(comment => {
+      axios.get(`/api/v1/users/${comment.UserId}/profile`)
+        .then(users => {
+          renderUserData(users.data, comment)
+        })
       return `<div class="${comment.id}">
         <div>${comment.comment}</div>
-        <div>${comment.UserId}</div>
-        <div>${comment.createdAt}</div>
+        <div class="userDataDiv${comment.id}"></div>
+        <div>${new Date(comment.createdAt).toLocaleString()}</div>
         <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>`
     })
     .join('')
   document.querySelector(`#list-of-comments${postId}`).innerHTML = html
 }
 
+function renderUserData(userData, commentData) {
+  document.querySelector(`.userDataDiv${commentData.id}`).innerHTML = `<a href = "/profile.html?id=${userData.id}" > ${userData.email.substring(0, userData.email.indexOf('@'))} </a>`
+}
+
 function renderLikes(posts, postId) {
   const post = posts.find(current => {
     return current.id == postId
   })
+
   document.querySelector(`#like-counter${postId}`).innerHTML = post.Likes.length
   document.querySelector(`#dislike-counter${postId}`).innerHTML = post.Dislikes.length
 }
-
-
-// axios.get(`/api/v1/blogs/${id}`)
-//   .then(res => {
-//     renderBlogs(res.data)
-//   })
 
 axios.get(`/api/v1/blogs/${id}/posts`)
   .then(res => {
@@ -131,8 +124,7 @@ document.querySelector('#postForm').addEventListener('submit', e => {
       })
       .catch(error => {
         //on error
-        console.log(error.response)
-          //display error
+        //display error
         alert(error.response.data.error || 'Something went wrong')
       })
 

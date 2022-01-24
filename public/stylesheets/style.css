@@ -154,3 +154,11 @@ h4 {
 .aboutUsTitle {
     margin: 20px;
 }
+
+.input-group {
+    width: 25%;
+}
+
+#uploadProfilePicture {
+    font-size: 16px;
+}

@@ -92,6 +92,7 @@ router.get('/:userId/profile', (req, res) => {
   .then(user => {
     if (!user) {
       res.status(404).json({
+
         error: 'Could not find user with that id'
       })
       return
@@ -99,8 +100,8 @@ router.get('/:userId/profile', (req, res) => {
     res.json({
       userId: user.id,
       firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
-      reviews: user.Posts,
       profilePicture: user.profilePicture
     })
   })
