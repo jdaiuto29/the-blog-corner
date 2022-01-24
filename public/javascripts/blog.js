@@ -53,7 +53,7 @@ function renderPosts(posts) {
         <div class="commentSection"><div id="list-of-comments${post.id}"></form></div><button type="button" class="commentButton" data-postId="${post.id}">Comment</button></div>
         <form class="comment${post.id} d-none "><p>
         <label for="text">Comment below:</label><br>
-        <textarea id="text${post.id}" required></textarea>
+        <textarea id="text${post.id}" class="w-75" required></textarea>
         </p>
         <p class="createdAt"></p>
         <button type="submit" id="submitButton" data-postId="${post.id}">Submit Comment</button></form>
