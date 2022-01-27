@@ -2,25 +2,8 @@ header {
     background-color: #001524;
 }
 
-#altHeader {
-    background-color: #78290f;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
-
-#altHeader span {
-    color: #ffecd1;
-    font-family: 'Luxurious Roman', 'cursive';
-}
-
 body {
     background-color: #001524;
-}
-
-.altBody {
-    background-color: #78290f
 }
 
 .blogs {
@@ -32,13 +15,6 @@ body {
     background-color: #15615D;
     color: #eaf9fb;
     border: solid 5px #15615D;
-}
-
-.altFirstNav {
-    padding: 24px;
-    background-color: #ff7d00;
-    color: #fff2e6;
-    border: solid 5px #ff7d00;
 }
 
 .secondNav {
@@ -57,18 +33,16 @@ body {
     width: 55px;
 }
 
+.logoTitle {
+    color: #ffecd1;
+    font-family: 'Arvo', serif;
+}
+
 .allBody {
     display: flex;
     justify-content: center;
     border-right: solid 40px #001524;
     border-left: solid 40px #001524;
-}
-
-#altAllBody {
-    display: flex;
-    justify-content: center;
-    border-right: solid 40px #78290f;
-    border-left: solid 40px #78290f;
 }
 
 #putPosts {
