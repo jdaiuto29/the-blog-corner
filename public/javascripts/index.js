@@ -1,5 +1,3 @@
-console.debug('Script Starting')
-
 const id = new URLSearchParams(location.search).get('id')
 
 function renderBlogs(blogs) {

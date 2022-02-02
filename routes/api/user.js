@@ -92,7 +92,6 @@ router.get('/:userId/profile', (req, res) => {
   .then(user => {
     if (!user) {
       res.status(404).json({
-
         error: 'Could not find user with that id'
       })
       return
@@ -106,6 +105,35 @@ router.get('/:userId/profile', (req, res) => {
     })
   })
 })
+
+router.patch("/:id/update-profile", function(req, res) {
+  const uid = req.params.id;
+
+  models.User.findAll({
+    where: {
+      email: req.body.email
+    }
+  }).then(users => {
+    if (users.length) {
+      res.status(400).json({
+        error: 'That email already exists'
+      })
+    } else {
+      bcrypt.hash(req.body.password, 10).then(hash => {
+        let updateProfile = {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          email: req.body.email,
+          password: hash
+        };
+        models.User.update(updateProfile, { where: { id: uid } })
+          .then(user => {
+            res.status(201).json(user)
+          })
+      })
+    }
+  })
+});
 
 router.post("/:id/add-profile-picture", function(req, res) {
   const uid = req.params.id;

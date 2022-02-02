@@ -7,14 +7,14 @@
 //         `
 //     }).join('')
 //     document.querySelector('.pfp').innerHTML = pfp
-// }
-const user = JSON.parse(window.localStorage.getItem('user'))
-  //if true
+//
+//if true
 if (user) {
   //find all 'logged-in-only' elements
   const loggedInElements = document.querySelectorAll(".logged-in-only")
     //display elements
   for (const element of loggedInElements) {
+    console.log(element)
     element.classList.remove('d-none')
 
   }
