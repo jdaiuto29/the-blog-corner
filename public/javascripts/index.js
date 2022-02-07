@@ -66,16 +66,16 @@ const user = JSON.parse(localStorage.getItem('user'))
 
 function renderComments(comments, postId) {
   const html = comments.map(comment => {
-      axios.get(`/api/v1/users/${comment.UserId}/profile`)
-        .then(users => {
-          renderUserData(users.data, comment)
-        })
-      return `<div class="${comment.id}">
+    axios.get(`/api/v1/users/${comment.UserId}/profile`)
+      .then(users => {
+        renderUserData(users.data, comment)
+      })
+    return `<div class="${comment.id}">
         <div>${comment.comment}</div>
         <div class="userDataDiv${comment.id}"></div>
         <div>${new Date(comment.createdAt).toLocaleString()}</div>
         <button class="DELETE" data-commentId="${comment.id}" data-postId="${postId}">Delete comment</button></div>`
-    })
+  })
     .join('')
   document.querySelector(`#list-of-comments${postId}`).innerHTML = html
 }
@@ -98,8 +98,8 @@ const commentButtonTimeout = setTimeout(() => {
     if (e.target.id == 'submitButton') {
       e.preventDefault();
       axios.post(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments`, {
-          comment: document.querySelector(`#text${e.target.dataset.postid}`).value
-        })
+        comment: document.querySelector(`#text${e.target.dataset.postid}`).value
+      })
         .then(res => {
           axios.get(`api/v1/blogs/${id}/posts/${e.target.dataset.postid}/comments`)
             .then(comments => {
@@ -122,14 +122,14 @@ const commentButtonTimeout = setTimeout(() => {
 document.addEventListener('click', e => {
   if (e.target.classList.contains("likeButton")) {
     axios.post(`api/v1/blogs/${e.target.dataset.blogid}/posts/${e.target.dataset.postid}/likes`, {
-        likes: e.target.value
-      }).then(res => {
-        alert('you liked this post!')
-        axios.get(`api/v1/blogs/${e.target.dataset.blogid}/posts`)
-          .then(likes => {
-            renderLikes(likes.data, e.target.dataset.postid)
-          })
-      })
+      likes: e.target.value
+    }).then(res => {
+      alert('you liked this post!')
+      axios.get(`api/v1/blogs/${e.target.dataset.blogid}/posts`)
+        .then(likes => {
+          renderLikes(likes.data, e.target.dataset.postid)
+        })
+    })
       .catch(error => {
         alert('you liked this post already!')
       })
@@ -140,14 +140,14 @@ document.addEventListener('click', e => {
 document.addEventListener('click', e => {
   if (e.target.classList.contains("dislikeButton")) {
     axios.post(`api/v1/blogs/${e.target.dataset.blogid}/posts/${e.target.dataset.postid}/dislikes`, {
-        dislikes: e.target.value
-      }).then(res => {
-        alert('you disliked this post!')
-        axios.get(`api/v1/blogs/${e.target.dataset.blogid}/posts`)
-          .then(dislikes => {
-            renderLikes(dislikes.data, e.target.dataset.postid)
-          })
-      })
+      dislikes: e.target.value
+    }).then(res => {
+      alert('you disliked this post!')
+      axios.get(`api/v1/blogs/${e.target.dataset.blogid}/posts`)
+        .then(dislikes => {
+          renderLikes(dislikes.data, e.target.dataset.postid)
+        })
+    })
       .catch(error => {
         alert('you disliked this post already!')
       })

@@ -22,11 +22,11 @@ body {
     background-color: #ffecd1;
 }
 
-#plsWork {
+/* #plsWork {
     margin-right: 0px;
     padding-left: 0px;
     padding-right: 0px;
-}
+} */
 
 .logo {
     height: 50px;
@@ -138,4 +138,5 @@ h4 {
 }
 .addPost {
     height: 300px;
+    width: 800px;
 }
