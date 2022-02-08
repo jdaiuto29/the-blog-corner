@@ -4,7 +4,7 @@ module.exports = {
     "username": process.env.DB_USER || "postgres",
     "password": process.env.DB_PASS || null,
     "database": "the-blog-corner",
-    "host": process.env.DB_HOST || "winhost",
+    "host": process.env.DB_HOST || "localhost",
     "dialect": "postgres"
   },
   "production": {

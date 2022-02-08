@@ -28,10 +28,10 @@ const upload = multer({
     // acl: "public-read",
     s3,
     bucket: 'blogimageupload',
-    metadata: function(req, file, cb) {
+    metadata: function (req, file, cb) {
       cb(null, { fieldName: "TESTING_METADATA" });
     },
-    key: function(req, file, cb) {
+    key: function (req, file, cb) {
       cb(null, Date.now().toString());
     },
   }),
