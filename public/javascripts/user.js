@@ -1,12 +1,12 @@
-// function renderPfp(users) {
-//     const pfp = users.map (user => {
-//         return `   
-//         <a href="profile.html" class="d-block link-dark text-decoration-none dropdown-toggle logged-in-only" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-//         <img onerror='this.src="pictures/no-image.jpeg"' src="${user.profilePicture}" height="45px" width="45px">
-//         </a>
-//         `
-//     }).join('')
-//     document.querySelector('.pfp').innerHTML = pfp
+function renderPfp(users) {
+    const pfp = users.map (user => {
+        return `   
+        <a href="profile.html" class="d-block link-dark text-decoration-none dropdown-toggle logged-in-only" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <img onerror='this.src="pictures/no-image.jpeg"' src="${user.profilePicture}" height="45px" width="45px">
+        </a>
+        `
+    }).join('')
+    document.querySelector('.pfp').innerHTML = pfp
 //
 //if true
 if (user) {
@@ -40,6 +40,4 @@ document.addEventListener('click', e => {
         window.location.reload()
       })
   }
-})
-
-//double check with html for correct locations
+})}
