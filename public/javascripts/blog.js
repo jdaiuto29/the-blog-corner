@@ -81,6 +81,7 @@ function renderComments(comments, postId) {
     Promise.all(userDetails)
         .then(comments => {
             const html = comments.map(comment => {
+                console.log(comment)
                 return `<div class="${comment.id}">
                 <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${comment.user.profilePicture}" height="45px" width="45px"></div>
                 <div>${comment.user.email.substring(0, comment.user.email.indexOf('@'))}  (${new Date(comment.createdAt).toLocaleString()})</div>
@@ -96,7 +97,7 @@ function renderComments(comments, postId) {
 }
 
 function renderUserData(userData, commentData) {
-  document.querySelector(`.userDataDiv${commentData.id}`).innerHTML = `<a href = "/profile.html?id=${userData.id}" > ${userData.email.substring(0, userData.email.indexOf('@'))} </a>`
+  document.querySelector(`.userDataDiv${commentData.id}`).innerHTML = ` comment by: ${userData.email.substring(0, userData.email.indexOf('@'))}`
 }
 
 function renderLikes(posts, postId) {

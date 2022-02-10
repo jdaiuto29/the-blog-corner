@@ -1,3 +1,4 @@
+
 function renderProfile(user) {
   document.querySelector('.profileInfo').innerHTML = `
   <div><img onerror='this.src="pictures/no-image.jpeg"' src="${user.profilePicture}" height="200px" width="200px"></div>  
@@ -57,7 +58,7 @@ function renderProfile(user) {
 
   </div>
 </div>
-  <span style="text-decoration:underline; font-weight:bold;">Recent Posts:</span><br><br>
+  <br><br><span style="text-decoration:underline; font-weight:bold; margin-left:10px;">Recent Posts:</span><br><br>
   <div class="userPost"></div>
   
   `
@@ -171,3 +172,10 @@ document.addEventListener('click', e => {
       })
   }
 })
+
+function renderBlogs(blogs) {
+  const html = blogs.map(blog => {
+    return `<li><a href="/blog.html?id=${blog.id}">${blog.title}</a></li>`
+  }).join('')
+  document.querySelector('#blogs').innerHTML = html
+}
