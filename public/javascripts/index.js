@@ -43,7 +43,7 @@ function renderAllPosts(posts) {
 
         return `<div class = "singlePost" >
             <div class = "profilePicture" ><img onerror='this.src="pictures/no-image.jpeg"' src="${post.user.profilePicture}" height="45px" width="45px"></div>
-            <div class = "titlePost"><a href="/profile.html?id=${post.user.id}">${post.user.email.substring(0, post.user.email.indexOf('@'))}</a></div>
+            <div class = "titlePost">posted by: ${post.user.email.substring(0, post.user.email.indexOf('@'))}</div>
           <div> ${post.text}</div>
           <input type="image" src="pictures/like.jpeg" class="likeButton"  data-blogId="${post.BlogId}" data-postId="${post.id}" width="25" height="25"><span id="like-counter${post.id}">${post.Likes.length}</span>&emsp;
           <input type="image" src="pictures/dislike.jpeg" class="dislikeButton"  data-blogId="${post.BlogId}" data-postId="${post.id}" width="25" height="25"> <span id="dislike-counter${post.id}">${post.Dislikes.length}</span>
@@ -81,7 +81,7 @@ function renderComments(comments, postId) {
 }
 
 function renderUserData(userData, commentData) {
-  document.querySelector(`.userDataDiv${commentData.id}`).innerHTML = `<a href = "/profile.html?id=${userData.id}" > ${userData.email.substring(0, userData.email.indexOf('@'))} </a>`
+  document.querySelector(`.userDataDiv${commentData.id}`).innerHTML = `posted by: ${userData.email.substring(0, userData.email.indexOf('@'))}`
 }
 
 function renderLikes(posts, postId) {
